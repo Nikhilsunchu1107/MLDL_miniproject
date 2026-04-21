@@ -48,9 +48,10 @@ Status legend: `[ ]` not started, `[-]` in progress, `[x]` done, `[!]` blocked
   - Done when: random sample pulls work and visual spot checks (10-20 images) look correct.
   - Evidence: `gender_dataset.py` (`GenderDataset`, `TrainTransform`, `EvalTransform`) and `gender_dataset_smoke_test.py`; `uv run python gender_dataset_smoke_test.py` passed on 20 random eval + train samples with tensor shape `(3, 224, 224)`, dtype `float32`, labels in `{0,1}`, finite values, and visual panels saved to `outputs/dataset_sanity/`.
 
-- [ ] 1.5 Create stratified 70/15/15 train/val/test split and persist split assignments.
+- [x] 1.5 Create stratified 70/15/15 train/val/test split and persist split assignments.
   - Scope: split only labeled, quality-passed samples.
   - Done when: class balance is preserved across all splits and counts are logged.
+  - Evidence: `create_train_val_test_split.py`; `uv run python create_train_val_test_split.py` created deterministic stratified splits for `583` quality-passed samples with counts `train=408`, `val=87`, `test=88` and balanced class distribution (`train: male=213 female=195`, `val: male=46 female=41`, `test: male=46 female=42`); artifacts at `outputs/data_pipeline/train_val_test_split.csv` and `outputs/data_pipeline/split_summary.json`.
 
 ## Phase 2 - Model + Training
 

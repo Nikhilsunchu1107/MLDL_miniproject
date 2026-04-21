@@ -169,11 +169,19 @@ Phase 0 validation evidence:
 - No preprocessing issues were observed in this gate; Phase 1 is cleared to start.
 
 ### Phase 1: Data Pipeline (2-3 hours)
-- [ ] Parse Demographics Excel, build image_id → label map
-- [ ] Write dataset class with TIFF detection
-- [ ] Verify labels visually (spot check 10-20 images)
-- [ ] Apply quality filter using Ground Truth.xlsx
-- [ ] Set up train/val/test splits
+- [x] Parse Demographics Excel, build image_id → label map
+- [x] Write dataset class with TIFF detection
+- [x] Verify labels visually (spot check 10-20 images)
+- [x] Apply quality filter using Ground Truth.xlsx
+- [x] Set up train/val/test splits
+
+Phase 1 validation evidence:
+- `uv run python parse_demographics.py` -> passed with `700` samples (`male=364`, `female=336`); outputs in `outputs/data_pipeline/demographics_mapping.*`.
+- `uv run python parse_quality_metadata.py` -> deterministic quality filter passed with `583` included / `117` excluded; outputs at `outputs/data_pipeline/quality_filter_manifest.csv`, `outputs/data_pipeline/quality_filter_summary.json`, and `outputs/data_pipeline/quality_filter_rule.md`.
+- `uv run python build_dataset_manifest.py` -> joined paths + labels + quality into manifest (`700` rows total, `583` quality-passed, no missing labels in included set).
+- `uv run python gender_dataset_smoke_test.py` -> `GenderDataset` sample retrieval passed on 20 random eval/train samples with tensor shape `(3, 224, 224)`, valid labels `{0,1}`, and visual spot-check panels in `outputs/dataset_sanity/`.
+- `uv run python create_train_val_test_split.py` -> stratified split persisted with counts `train=408`, `val=87`, `test=88` and balanced class distribution in `outputs/data_pipeline/train_val_test_split.csv` and `outputs/data_pipeline/split_summary.json`.
+- No Phase 1 pipeline failures were observed in this validation run; Phase 2 is cleared to start.
 
 ### Phase 2: Model + Training (2-3 hours)
 - [ ] Build EfficientNet-B0 model with custom head
