@@ -1,0 +1,91 @@
+# Project Progress
+
+Track work in strict `masterplan.md` order. Do not start a later phase until the current phase exit criteria are met.
+
+Status legend: `[ ]` not started, `[-]` in progress, `[x]` done, `[!]` blocked
+
+## Phase 0 - Preprocessing Validation (Gate)
+
+- [ ] 0.1 Build a standalone image decode utility with content-based handling for TIFF-in-JPG files.
+  - Scope: loading only, no labels or training.
+  - Done when: utility successfully opens sample files from `datasets/Dataset` including known TIFF-in-JPG cases.
+
+- [ ] 0.2 Implement preprocessing primitives (circular mask, CLAHE on green channel, resize to 224x224, ImageNet normalization).
+  - Scope: pure preprocessing functions with visual sanity checks.
+  - Done when: functions run end-to-end on single images and output expected tensor/image shapes.
+
+- [ ] 0.3 Validate preprocessing on 50-100 images from `datasets/retinal-disease-detection-002`.
+  - Scope: robustness check across mixed resolutions.
+  - Done when: no decode/preprocess failures and visual outputs look clinically plausible.
+
+- [ ] 0.4 Record validation findings and fixes in notebook markdown.
+  - Scope: short notes and representative before/after visuals.
+  - Done when: Phase 0 evidence is documented and Phase 1 gate is explicitly marked passed.
+
+## Phase 1 - Data Pipeline
+
+- [ ] 1.1 Parse `datasets/Dataset/Demographics of the participants.xlsx` into `image_id -> gender` mapping.
+  - Scope: mapping + basic label integrity checks.
+  - Done when: class counts match expected distribution (364 male / 336 female).
+
+- [ ] 1.2 Parse quality metadata (`Ground Truth.xlsx`, optionally `Individual Quality Assessment.xlsx`) and define filtering rule.
+  - Scope: deterministic quality inclusion/exclusion logic.
+  - Done when: filtered image list is reproducible and documented.
+
+- [ ] 1.3 Build dataset manifest joining file paths, labels, and quality filter outcome.
+  - Scope: one tabular source of truth for downstream split/training.
+  - Done when: manifest has no missing labels for included samples.
+
+- [ ] 1.4 Implement PyTorch `Dataset` class using robust decoder + preprocessing pipeline.
+  - Scope: train/eval transform wiring and sample retrieval.
+  - Done when: random sample pulls work and visual spot checks (10-20 images) look correct.
+
+- [ ] 1.5 Create stratified 70/15/15 train/val/test split and persist split assignments.
+  - Scope: split only labeled, quality-passed samples.
+  - Done when: class balance is preserved across all splits and counts are logged.
+
+## Phase 2 - Model + Training
+
+- [ ] 2.1 Implement EfficientNet-B0 model with custom binary head.
+  - Scope: model definition only.
+  - Done when: forward pass works on a batch from dataloader.
+
+- [ ] 2.2 Implement training/eval loop utilities (loss, optimizer, scheduler optional, checkpointing, early stopping hooks).
+  - Scope: reusable loop code with metric logging.
+  - Done when: one short smoke-run epoch completes without errors.
+
+- [ ] 2.3 Run Phase 1 training (frozen backbone, ~5 epochs).
+  - Scope: train head only and save best checkpoint.
+  - Done when: phase metrics and checkpoint are recorded.
+
+- [ ] 2.4 Run Phase 2 fine-tuning (unfreeze top layers, ~15 epochs, lower LR).
+  - Scope: controlled unfreezing + lower learning rate.
+  - Done when: best fine-tuned checkpoint and full training history are saved.
+
+## Phase 3 - Evaluation
+
+- [ ] 3.1 Evaluate best model on test split.
+  - Scope: Accuracy, ROC-AUC, F1, confusion matrix.
+  - Done when: all required metrics are computed and logged in notebook.
+
+- [ ] 3.2 Generate training curves (loss + accuracy for train/val).
+  - Scope: clear plots for both phases.
+  - Done when: plots are visible in notebook and interpretable.
+
+- [ ] 3.3 Generate Grad-CAM visualizations for representative test samples.
+  - Scope: qualitative explainability outputs.
+  - Done when: multiple sample visualizations are produced with short interpretation notes.
+
+## Phase 4 - Report / Notebook Finalization
+
+- [ ] 4.1 Structure notebook into clear sections (setup, data, preprocessing, training, evaluation, conclusions).
+  - Scope: markdown cleanup and reproducible cell order.
+  - Done when: notebook can be run top-to-bottom without narrative gaps.
+
+- [ ] 4.2 Add final results tables and figures.
+  - Scope: consolidated metrics table + key visuals.
+  - Done when: primary goal status (>75% val accuracy) is explicitly stated.
+
+- [ ] 4.3 Add limitations and future work notes aligned with `masterplan.md`.
+  - Scope: short, evidence-based discussion (no over-claiming).
+  - Done when: final section is complete and consistent with observed results.
