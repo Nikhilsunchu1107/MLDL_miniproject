@@ -43,9 +43,10 @@ Status legend: `[ ]` not started, `[-]` in progress, `[x]` done, `[!]` blocked
   - Done when: manifest has no missing labels for included samples.
   - Evidence: `build_dataset_manifest.py`; `uv run python build_dataset_manifest.py` produced `700` total rows and `583` quality-passed rows with `0` missing labels among included samples; artifacts at `outputs/data_pipeline/dataset_manifest.csv`, `outputs/data_pipeline/dataset_manifest_included.csv`, and `outputs/data_pipeline/dataset_manifest_summary.json`.
 
-- [ ] 1.4 Implement PyTorch `Dataset` class using robust decoder + preprocessing pipeline.
+- [x] 1.4 Implement PyTorch `Dataset` class using robust decoder + preprocessing pipeline.
   - Scope: train/eval transform wiring and sample retrieval.
   - Done when: random sample pulls work and visual spot checks (10-20 images) look correct.
+  - Evidence: `gender_dataset.py` (`GenderDataset`, `TrainTransform`, `EvalTransform`) and `gender_dataset_smoke_test.py`; `uv run python gender_dataset_smoke_test.py` passed on 20 random eval + train samples with tensor shape `(3, 224, 224)`, dtype `float32`, labels in `{0,1}`, finite values, and visual panels saved to `outputs/dataset_sanity/`.
 
 - [ ] 1.5 Create stratified 70/15/15 train/val/test split and persist split assignments.
   - Scope: split only labeled, quality-passed samples.
