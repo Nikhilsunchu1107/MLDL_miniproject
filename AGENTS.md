@@ -4,6 +4,7 @@
 - `main.py` is a placeholder and does not run the ML pipeline.
 - `README.md` is empty; treat `masterplan.md` and `dataset_audit_report.md` as the project source of truth.
 - There are no configured lint/test/typecheck tasks yet (no pytest/ruff/mypy config, no CI workflows).
+- Phase 0.1 and 0.2 are implemented in standalone scripts/modules; current active work starts at `progress.md` item 0.3.
 
 ## Environment and Commands
 - Python version is pinned to 3.11 (`.python-version`, `mise.toml`, `pyproject.toml`).
@@ -11,6 +12,19 @@
 - `uv sync`
 - `uv run jupyter notebook`
 - `uv run python main.py` (only for scaffold sanity-check; not the training pipeline)
+- Installed ML stack includes `torch` and `torchvision` in `pyproject.toml`.
+
+## Current Entrypoints (Do Not Rebuild)
+- TIFF-in-JPG robust decoder is already implemented in `image_decode.py` (`robust_decode_image`).
+- Phase 0.1 verification command: `uv run python image_decode.py`.
+- Preprocessing primitives are implemented in `preprocessing.py`:
+- `apply_circular_mask`
+- `apply_clahe_on_green_channel`
+- `resize_to_224`
+- `normalize_imagenet`
+- `preprocess_image`
+- Phase 0.2 verification command: `uv run python preprocessing_smoke_test.py`.
+- Visual sanity outputs are written to `outputs/preprocessing_sanity/`.
 
 ## Data Scope (Do Not Guess)
 - Use `datasets/Dataset` as the only labeled gender-training set (700 images; 364 male, 336 female).
@@ -24,6 +38,7 @@
 ## Preprocessing Validation Rule
 - Before touching labeled training data, validate preprocessing on `datasets/retinal-disease-detection-002` (unlabeled; 2254 images).
 - This validation dataset is for pipeline robustness only; do not use it for train/val/test metrics.
+- Next required task is exactly `progress.md` item 0.3 (run preprocessing on 50-100 images from `retinal-disease-detection-002`).
 
 ## Dataset Exclusions for This Project
 - Ignore these sources for gender model training/evaluation: `retinal-colorized-oct-images-003`, `fundus-image-registration`, `retina-blood-vessel`, `retinal-vessel-segmentation`, `UK_Biobank_Dataset`, `papila-retinal-fundus-images`.
@@ -35,3 +50,6 @@
 - freeze backbone, train head (~5 epochs)
 - unfreeze top layers, fine-tune (~15 epochs, lower LR)
 - Report metrics: Accuracy, ROC-AUC, F1, confusion matrix; include Grad-CAM visuals and training curves.
+
+## Progress Tracking
+- Source of truth for task state is `progress.md`; update it immediately after each completed step with concrete evidence (command + artifact path).

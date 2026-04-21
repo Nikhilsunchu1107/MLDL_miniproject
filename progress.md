@@ -16,9 +16,10 @@ Status legend: `[ ]` not started, `[-]` in progress, `[x]` done, `[!]` blocked
   - Done when: functions run end-to-end on single images and output expected tensor/image shapes.
   - Evidence: `preprocessing.py` + `preprocessing_smoke_test.py`; `uv run python preprocessing_smoke_test.py` passed with output tensor shape `(3, 224, 224)` for `AMD-001.jpg`, `DR-001.jpg`, `Healthy-001.jpg`; visuals saved in `outputs/preprocessing_sanity/`.
 
-- [ ] 0.3 Validate preprocessing on 50-100 images from `datasets/retinal-disease-detection-002`.
+- [x] 0.3 Validate preprocessing on 50-100 images from `datasets/retinal-disease-detection-002`.
   - Scope: robustness check across mixed resolutions.
   - Done when: no decode/preprocess failures and visual outputs look clinically plausible.
+  - Evidence: `validate_preprocessing_batch.py`; `uv run python validate_preprocessing_batch.py` processed 75 images with 0 failures; report at `outputs/preprocessing_validation/validation_report.md`, summary at `outputs/preprocessing_validation/validation_summary.json`, and 10 visual panels in `outputs/preprocessing_validation/`.
 
 - [ ] 0.4 Record validation findings and fixes in notebook markdown.
   - Scope: short notes and representative before/after visuals.
