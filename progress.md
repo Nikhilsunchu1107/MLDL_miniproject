@@ -21,23 +21,27 @@ Status legend: `[ ]` not started, `[-]` in progress, `[x]` done, `[!]` blocked
   - Done when: no decode/preprocess failures and visual outputs look clinically plausible.
   - Evidence: `validate_preprocessing_batch.py`; `uv run python validate_preprocessing_batch.py` processed 75 images with 0 failures; report at `outputs/preprocessing_validation/validation_report.md`, summary at `outputs/preprocessing_validation/validation_summary.json`, and 10 visual panels in `outputs/preprocessing_validation/`.
 
-- [ ] 0.4 Record validation findings and fixes in notebook markdown.
+- [x] 0.4 Record validation findings and fixes in notebook markdown.
   - Scope: short notes and representative before/after visuals.
   - Done when: Phase 0 evidence is documented and Phase 1 gate is explicitly marked passed.
+  - Evidence: `notebook.ipynb` created with sections for 0.1/0.2/0.3, embedded representative visuals from `outputs/preprocessing_sanity/` and `outputs/preprocessing_validation/`, links to `validation_report.md`/`validation_summary.json`, and explicit markdown marker `Phase 0 Gate: PASSED`.
 
 ## Phase 1 - Data Pipeline
 
-- [ ] 1.1 Parse `datasets/Dataset/Demographics of the participants.xlsx` into `image_id -> gender` mapping.
+- [x] 1.1 Parse `datasets/Dataset/Demographics of the participants.xlsx` into `image_id -> gender` mapping.
   - Scope: mapping + basic label integrity checks.
   - Done when: class counts match expected distribution (364 male / 336 female).
+  - Evidence: `parse_demographics.py`; `uv run python parse_demographics.py` passed integrity checks with total `700` samples and class counts `male=364`, `female=336`; outputs saved to `outputs/data_pipeline/demographics_mapping.csv`, `outputs/data_pipeline/demographics_mapping.json`, and `outputs/data_pipeline/demographics_mapping_summary.json`.
 
-- [ ] 1.2 Parse quality metadata (`Ground Truth.xlsx`, optionally `Individual Quality Assessment.xlsx`) and define filtering rule.
+- [x] 1.2 Parse quality metadata (`Ground Truth.xlsx`, optionally `Individual Quality Assessment.xlsx`) and define filtering rule.
   - Scope: deterministic quality inclusion/exclusion logic.
   - Done when: filtered image list is reproducible and documented.
+  - Evidence: `parse_quality_metadata.py`; `uv run python parse_quality_metadata.py` passed integrity checks and produced deterministic filter outputs with `700` total images, `583` included and `117` excluded by `Ground Truth Overall quality`; artifacts at `outputs/data_pipeline/quality_filter_manifest.csv`, `outputs/data_pipeline/quality_filter_summary.json`, and `outputs/data_pipeline/quality_filter_rule.md`.
 
-- [ ] 1.3 Build dataset manifest joining file paths, labels, and quality filter outcome.
+- [x] 1.3 Build dataset manifest joining file paths, labels, and quality filter outcome.
   - Scope: one tabular source of truth for downstream split/training.
   - Done when: manifest has no missing labels for included samples.
+  - Evidence: `build_dataset_manifest.py`; `uv run python build_dataset_manifest.py` produced `700` total rows and `583` quality-passed rows with `0` missing labels among included samples; artifacts at `outputs/data_pipeline/dataset_manifest.csv`, `outputs/data_pipeline/dataset_manifest_included.csv`, and `outputs/data_pipeline/dataset_manifest_summary.json`.
 
 - [ ] 1.4 Implement PyTorch `Dataset` class using robust decoder + preprocessing pipeline.
   - Scope: train/eval transform wiring and sample retrieval.

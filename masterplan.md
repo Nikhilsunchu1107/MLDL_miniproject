@@ -155,11 +155,18 @@ Ground Truth.xlsx
 ## 9. Development Phases — ONE DAY PLAN
 
 ### Phase 0: Preprocessing Validation (30-45 mins) ← NEW
-- [ ] Run preprocessing pipeline on 50-100 images from `retinal-disease-detection-002`
-- [ ] Visually inspect CLAHE output, mask application, resize quality
-- [ ] Confirm TIFF detection handles varied resolutions (1440x960 to 2000x1333)
-- [ ] Fix any issues before touching the labeled training data
-- [ ] Only proceed to Phase 1 once preprocessing looks clean
+- [x] Run preprocessing pipeline on 50-100 images from `retinal-disease-detection-002`
+- [x] Visually inspect CLAHE output, mask application, resize quality
+- [x] Confirm TIFF detection handles varied resolutions (1440x960 to 2000x1333)
+- [x] Fix any issues before touching the labeled training data
+- [x] Only proceed to Phase 1 once preprocessing looks clean
+
+Phase 0 validation evidence:
+- `uv run python image_decode.py` -> smoke test passed on TIFF-in-JPG (`AMD-001.jpg`, `DR-001.jpg`) and JPEG (`Healthy-001.jpg`).
+- `uv run python preprocessing_smoke_test.py` -> preprocessing smoke test passed; tensor shapes `(3, 224, 224)`; artifacts in `outputs/preprocessing_sanity/`.
+- `uv run python validate_preprocessing_batch.py --sample-size 100` -> processed 100/100 images with 0 failures; report at `outputs/preprocessing_validation/validation_report.md`.
+- Full validation-set decode sweep (`datasets/retinal-disease-detection-002/Diabetic Retinopathy/train/images`) confirmed expected mixed resolutions: width `1440..2000`, height `960..1333`.
+- No preprocessing issues were observed in this gate; Phase 1 is cleared to start.
 
 ### Phase 1: Data Pipeline (2-3 hours)
 - [ ] Parse Demographics Excel, build image_id → label map
