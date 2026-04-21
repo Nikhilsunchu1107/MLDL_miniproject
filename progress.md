@@ -6,13 +6,15 @@ Status legend: `[ ]` not started, `[-]` in progress, `[x]` done, `[!]` blocked
 
 ## Phase 0 - Preprocessing Validation (Gate)
 
-- [ ] 0.1 Build a standalone image decode utility with content-based handling for TIFF-in-JPG files.
+- [x] 0.1 Build a standalone image decode utility with content-based handling for TIFF-in-JPG files.
   - Scope: loading only, no labels or training.
   - Done when: utility successfully opens sample files from `datasets/Dataset` including known TIFF-in-JPG cases.
+  - Evidence: `image_decode.py` and `uv run python image_decode.py` smoke test passed on `AMD-001.jpg` (TIFF), `DR-001.jpg` (TIFF), `Healthy-001.jpg` (JPEG).
 
-- [ ] 0.2 Implement preprocessing primitives (circular mask, CLAHE on green channel, resize to 224x224, ImageNet normalization).
+- [x] 0.2 Implement preprocessing primitives (circular mask, CLAHE on green channel, resize to 224x224, ImageNet normalization).
   - Scope: pure preprocessing functions with visual sanity checks.
   - Done when: functions run end-to-end on single images and output expected tensor/image shapes.
+  - Evidence: `preprocessing.py` + `preprocessing_smoke_test.py`; `uv run python preprocessing_smoke_test.py` passed with output tensor shape `(3, 224, 224)` for `AMD-001.jpg`, `DR-001.jpg`, `Healthy-001.jpg`; visuals saved in `outputs/preprocessing_sanity/`.
 
 - [ ] 0.3 Validate preprocessing on 50-100 images from `datasets/retinal-disease-detection-002`.
   - Scope: robustness check across mixed resolutions.

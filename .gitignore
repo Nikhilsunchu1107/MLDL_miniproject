@@ -10,4 +10,7 @@ wheels/
 .venv
 
 # Datasets
-datasets
+datasets/
+
+# Output files
+outputs/
