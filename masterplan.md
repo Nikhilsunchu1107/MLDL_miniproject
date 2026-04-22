@@ -184,10 +184,17 @@ Phase 1 validation evidence:
 - No Phase 1 pipeline failures were observed in this validation run; Phase 2 is cleared to start.
 
 ### Phase 2: Model + Training (2-3 hours)
-- [ ] Build EfficientNet-B0 model with custom head
-- [ ] Implement two-phase training strategy
-- [ ] Add early stopping + model checkpointing
-- [ ] Train on RTX 4050 locally
+- [x] Build EfficientNet-B0 model with custom head
+- [x] Implement two-phase training strategy
+- [x] Add early stopping + model checkpointing
+- [x] Train on RTX 4050 locally
+
+Phase 2 validation evidence:
+- `uv run python model_smoke_test.py` -> model forward/backward smoke test passed with logits shape `(8, 1)` and valid gradients.
+- `uv run python training_utils_smoke_test.py` -> training utility smoke test passed on CUDA with one train+val epoch; checkpoint at `outputs/checkpoints/training_utils_smoke.pt`.
+- `prime-run uv run python train_phase1.py` -> Phase 1 (frozen backbone) completed with early stopping at epoch `4/5`; best validation metrics at epoch 1 (`val_loss=0.6634`, `val_acc=0.4598`); artifacts at `outputs/checkpoints/phase1/phase1_best.pt`, `outputs/checkpoints/phase1/phase1_last.pt`, and `outputs/training/phase1/phase1_history.json`.
+- `prime-run uv run python train_phase2.py` -> Phase 2 fine-tuning (unfreeze from feature block 6, lower LR) completed with early stopping at epoch `6/15`; best validation metrics at epoch 1 (`val_loss=0.6733`, `val_acc=0.5172`); artifacts at `outputs/checkpoints/phase2/phase2_best.pt`, `outputs/checkpoints/phase2/phase2_last.pt`, and `outputs/training/phase2/phase2_history.json`.
+- Phase 2 produced a validation-accuracy improvement over Phase 1 best checkpoint: `0.4598 -> 0.5172` (+0.0574 absolute).
 
 ### Phase 3: Evaluation (1-2 hours)
 - [ ] Generate all metrics (accuracy, AUC, F1, confusion matrix)

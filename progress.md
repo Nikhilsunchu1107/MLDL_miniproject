@@ -70,9 +70,10 @@ Status legend: `[ ]` not started, `[-]` in progress, `[x]` done, `[!]` blocked
   - Done when: phase metrics and checkpoint are recorded.
   - Evidence: `train_phase1.py`; `prime-run uv run python train_phase1.py` completed on CUDA with early stopping at epoch 4/5, best validation metrics at epoch 1 (`val_loss=0.6634`, `val_acc=0.4598`), and artifacts saved to `outputs/checkpoints/phase1/phase1_best.pt`, `outputs/checkpoints/phase1/phase1_last.pt`, and `outputs/training/phase1/phase1_history.json`.
 
-- [ ] 2.4 Run Phase 2 fine-tuning (unfreeze top layers, ~15 epochs, lower LR).
+- [x] 2.4 Run Phase 2 fine-tuning (unfreeze top layers, ~15 epochs, lower LR).
   - Scope: controlled unfreezing + lower learning rate.
   - Done when: best fine-tuned checkpoint and full training history are saved.
+  - Evidence: `train_phase2.py`; `prime-run uv run python train_phase2.py` completed on CUDA with top-block unfreezing (`unfreeze_from_feature_block=6`, trainable params `3157021`), early stopping at epoch 6/15, best validation metrics at epoch 1 (`val_loss=0.6733`, `val_acc=0.5172`), and artifacts saved to `outputs/checkpoints/phase2/phase2_best.pt`, `outputs/checkpoints/phase2/phase2_last.pt`, and `outputs/training/phase2/phase2_history.json`.
 
 ## Phase 3 - Evaluation
 
