@@ -55,17 +55,20 @@ Status legend: `[ ]` not started, `[-]` in progress, `[x]` done, `[!]` blocked
 
 ## Phase 2 - Model + Training
 
-- [ ] 2.1 Implement EfficientNet-B0 model with custom binary head.
+- [x] 2.1 Implement EfficientNet-B0 model with custom binary head.
   - Scope: model definition only.
   - Done when: forward pass works on a batch from dataloader.
+  - Evidence: `efficientnet_b0_model.py` (`GenderEfficientNet`) and `model_smoke_test.py`; `uv run python model_smoke_test.py` passed with input batch shape `(8, 3, 224, 224)`, logits shape `(8, 1)`, finite outputs, and successful backward pass (`BCEWithLogitsLoss` gradient flow confirmed).
 
-- [ ] 2.2 Implement training/eval loop utilities (loss, optimizer, scheduler optional, checkpointing, early stopping hooks).
+- [x] 2.2 Implement training/eval loop utilities (loss, optimizer, scheduler optional, checkpointing, early stopping hooks).
   - Scope: reusable loop code with metric logging.
   - Done when: one short smoke-run epoch completes without errors.
+  - Evidence: `training_utils.py` (`TrainingConfig`, `EarlyStopping`, `create_loss_fn`, `create_optimizer`, `create_scheduler`, `train_one_epoch`, `evaluate`, `save_checkpoint`, `load_checkpoint`) and `training_utils_smoke_test.py`; `uv run python training_utils_smoke_test.py` passed on CUDA with one train + val epoch over split subsets, finite metrics (`train_loss=0.727721`, `val_loss=0.670207`), and checkpoint artifact `outputs/checkpoints/training_utils_smoke.pt`.
 
-- [ ] 2.3 Run Phase 1 training (frozen backbone, ~5 epochs).
+- [x] 2.3 Run Phase 1 training (frozen backbone, ~5 epochs).
   - Scope: train head only and save best checkpoint.
   - Done when: phase metrics and checkpoint are recorded.
+  - Evidence: `train_phase1.py`; `prime-run uv run python train_phase1.py` completed on CUDA with early stopping at epoch 4/5, best validation metrics at epoch 1 (`val_loss=0.6634`, `val_acc=0.4598`), and artifacts saved to `outputs/checkpoints/phase1/phase1_best.pt`, `outputs/checkpoints/phase1/phase1_last.pt`, and `outputs/training/phase1/phase1_history.json`.
 
 - [ ] 2.4 Run Phase 2 fine-tuning (unfreeze top layers, ~15 epochs, lower LR).
   - Scope: controlled unfreezing + lower learning rate.
